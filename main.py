@@ -35,5 +35,3 @@ def handler(event=None, context=None):
 
     return chrome.find_element(by=By.XPATH, value="//html").text
     """
-
-handler()
