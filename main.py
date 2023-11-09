@@ -2,9 +2,17 @@ from selenium import webdriver
 from tempfile import mkdtemp
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
+import os
+from os.path import join, dirname
 
 # todo: import my code over
 def handler(event=None, context=None):
+    
+    dotenv_path = join(dirname(__file__), '.env')
+    load_dotenv(dotenv_path)
+    print("environment variable test: " + os.environ['MINESWEEPER_USERNAME'])
+    
+    """
     options = webdriver.ChromeOptions()
     service = webdriver.ChromeService("/opt/chromedriver")
 
@@ -26,3 +34,6 @@ def handler(event=None, context=None):
     chrome.get("https://example.com/")
 
     return chrome.find_element(by=By.XPATH, value="//html").text
+    """
+
+handler()
