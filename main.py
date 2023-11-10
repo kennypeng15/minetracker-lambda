@@ -11,8 +11,10 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# main driver for the lambda function.
 def handler(event=None, context=None):
+    """
+    main driver for the lambda function.
+    """
     # example log
     # logger.info(event)
 
@@ -29,12 +31,12 @@ def handler(event=None, context=None):
         game_timestamp = message_dict["game-timestamp"]
         failsafe = message_dict["failsafe"]
     except:
-        # log
+        logger.info("Deserialized SNS event missing a required attribute.")
         raise
 
     # validate the failsafe
     if failsafe != os.environ['PERSONAL_SALT']:
-        # log
+        logger.info("SNS event failsafe verification did not match.")
         raise
 
     # connect to Dynamo
@@ -48,8 +50,7 @@ def handler(event=None, context=None):
     # if it does, simply return.
     matching_id = table.get_item(Key={"game-id": game_id})
     if "Item" in matching_id:
-        # log
-        print("already exists, returning.")
+        logger.info("SNS event URL already has an entry in DB. Skipping.")
         return
 
     # process the event
@@ -58,7 +59,7 @@ def handler(event=None, context=None):
 
     # check to see if this is meaningful (i.e., the game wasn't too short)
     if statistics["solve-percentage"] < 25.0:
-        # log
+        logger.info("Game processed, but was not meaningful (solve percentage too low). Skipping.")
         return
 
     # now, actually write to Dynamo
@@ -80,14 +81,17 @@ def handler(event=None, context=None):
             "solve-percentage": Decimal(str(statistics["solve-percentage"]))
         }
     )
-    # log
+    logger.info("Entry added to DB successfully.")
     return
 
 
-# given a URL, visits and scrapes for minesweeper game statistics.
-# if no statistics are found, an exception is raised.
-# returns a result block string, and html for the difficulty selector.
 def scrape_minesweeper_online_game(url):
+    """
+    given a URL, visits and scrapes for minesweeper game statistics.
+    if no statistics are found, an exception is raised.
+    returns a result block string, and html for the difficulty selector.
+    """
+
     # if run locally, this configuration block is neded:
     '''
     options = webdriver.ChromeOptions()
@@ -162,16 +166,18 @@ def scrape_minesweeper_online_game(url):
         return (result_block_text, difficulty_selector_html)
     except Exception as e:
         driver.quit()
-        # TODO: some kind of logging
+        logger.info("Unable to scrape game.")
         raise
 
-# given the text from a minesweeper game result block and the html of the difficulty selector,
-# parse out all relevant statistics and the actual difficulty of the game.
-# verifies that the username provided is the user that played the game; raise an exception if not.
 def process_scraped_minesweeper_game(result_block_text, difficulty_selector_html, username):
+    """
+    given the text from a minesweeper game result block and the html of the difficulty selector,
+    parse out all relevant statistics and the actual difficulty of the game.
+    verifies that the username provided is the user that played the game; raise an exception if not.
+    """
     # validate the game was played by the desired user
     if username not in result_block_text:
-        # TODO: some kind of logging
+        logger.info("Attempting to scrape game for another user.")
         raise
     
     # parse the difficulty from the HTML
