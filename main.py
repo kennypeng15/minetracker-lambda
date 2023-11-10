@@ -1,7 +1,3 @@
-from selenium import webdriver
-from tempfile import mkdtemp
-from selenium.webdriver.common.by import By
-from dotenv import load_dotenv
 import os
 from os.path import join, dirname
 from decimal import Decimal
@@ -10,14 +6,15 @@ import boto3
 import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+from dotenv import load_dotenv
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from tempfile import mkdtemp
 
 def handler(event=None, context=None):
     """
     main driver for the lambda function.
     """
-    # example log
-    # logger.info(event)
-
     # load necessary environment variables
     dotenv_path = join(dirname(__file__), '.env')
     load_dotenv(dotenv_path)
