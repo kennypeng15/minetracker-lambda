@@ -17,3 +17,4 @@ AWS Lambda function that scrapes and persists (to DynamoDB) minesweeper.online g
 - ephemeral storage: left as default 512MB
 - memory: 1024 MB
 - set retries to 0
+- timeout: 20s
