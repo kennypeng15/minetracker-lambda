@@ -21,8 +21,11 @@ def handler(event=None, context=None):
 
     # we assume that the event payload is a JSON string, so we have to de-serialize it into a dictionary to get what we need
     raw_message = event['Records'][0]['Sns']['Message']
+    # double up, since we have to escape in SNS
     message_dict = json.loads(raw_message)
-    game_url, game_timestamp, failsafe = ""
+    game_url = ""
+    game_timestamp = ""
+    failsafe = ""
     try:
         game_url = message_dict["game-url"]
         game_timestamp = message_dict["game-timestamp"]
@@ -55,7 +58,7 @@ def handler(event=None, context=None):
     statistics, difficulty = process_scraped_minesweeper_game(result_block, difficulty_selector, os.environ['MINESWEEPER_USERNAME'])
 
     # check to see if this is meaningful (i.e., the game wasn't too short)
-    if statistics["solve-percentage"] < 25.0:
+    if statistics["solve-percentage"] < 20.0:
         logger.info("Game processed, but was not meaningful (solve percentage too low). Skipping.")
         return
 
@@ -124,8 +127,8 @@ def scrape_minesweeper_online_game(url):
     driver.get(url)
     # wait at MOST x seconds for rendering; if things found before then, return right away.
     # this is intentionally kept fairly low, to reduce the possibility of lambda taking forever ($$$)
-    # TODO: local tests have shown 7 seconds is more than enough, but running this in lambda may show otherwise.
-    driver.implicitly_wait(7)
+    # try 8
+    driver.implicitly_wait(8)
 
     # in the event that we've visited a URL, but haven't actually played the game at that URL,
     # there'll be no statistics to scrape.

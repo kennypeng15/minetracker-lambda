@@ -24,8 +24,9 @@ RUN pip install -r requirements.txt
 COPY --from=build /opt/chrome-linux64 /opt/chrome
 COPY --from=build /opt/chromedriver-linux64 /opt/
 
-# copy function code
+# copy function code and the .env file 
 COPY main.py ${LAMBDA_TASK_ROOT}
+COPY .env ${LAMBDA_TASK_ROOT}
 
 # set the CMD properly
 CMD [ "main.handler" ]
