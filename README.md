@@ -12,3 +12,8 @@ AWS Lambda function that scrapes and persists (to DynamoDB) minesweeper.online g
 - tag and push the image to ECR
 - from the Lambda console, redeploy the image, testing if desired
 - (cleanup): delete the old local image and old image in ECR
+
+# important lambda configuration values:
+- ephemeral storage: left as default 512MB
+- memory: 1024 MB
+- set retries to 0
