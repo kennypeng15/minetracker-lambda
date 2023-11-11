@@ -18,3 +18,4 @@ AWS Lambda function that scrapes and persists (to DynamoDB) minesweeper.online g
 - memory: 1024 MB
 - set retries to 0
 - timeout: 20s
+- be sure to configure the cloudwatch log group for your lambda to not have permanent retention!
