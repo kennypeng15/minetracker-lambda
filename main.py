@@ -45,6 +45,7 @@ def handler(event=None, context=None):
 
     # parse out the ID from the URL
     game_id = game_url.split('/')[-1]
+    logger.info("Parsed game ID from SNS event: " + game_id)
 
     # check if the ID corresponding to the URL passed in has an existing entry in Dynamo already.
     # if it does, simply return.
@@ -54,6 +55,7 @@ def handler(event=None, context=None):
         return
 
     # process the event
+    logger.info("Starting game processing.")
     result_block, difficulty_selector = scrape_minesweeper_online_game(game_url)
     statistics, difficulty = process_scraped_minesweeper_game(result_block, difficulty_selector, os.environ['MINESWEEPER_USERNAME'])
 
@@ -63,6 +65,7 @@ def handler(event=None, context=None):
         return
 
     # now, actually write to Dynamo
+    logger.info("Game processing complete. Writing to DB.")
     table.put_item(
         Item={
             "game-id": game_id,
@@ -177,7 +180,7 @@ def process_scraped_minesweeper_game(result_block_text, difficulty_selector_html
     """
     # validate the game was played by the desired user
     if username not in result_block_text:
-        logger.info("Attempting to scrape game for another user.")
+        logger.info("Error: attempting to scrape game for another user.")
         raise
     
     # parse the difficulty from the HTML
