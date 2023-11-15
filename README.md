@@ -16,6 +16,17 @@ AWS Lambda function that scrapes and persists (to DynamoDB) minesweeper.online g
 # important lambda configuration values:
 - ephemeral storage: left as default 512MB
 - memory: 1024 MB
-- set retries to 0
+- set retries to 1
+    - debate: should this be 1? or 0? or 2?
+    - there are 3 main kinds of errors that pop up:
+    - timeout errors (which just happen, and can lead to actual data loss)
+    - element not found errors (which mean that the game actually wasn't played)
+    - webdriver exception errors (oopsie on the webdriver side) (can lead to actual dats loss as well)
+    - so if we set to 1 and just assume that the true number of element not founds is true, maybe we'll have more success ...
+    - changed to 1.
+    - still, some things slip through the cracks - could consider upping to 2 ...
 - timeout: 20s
 - be sure to configure the cloudwatch log group for your lambda to not have permanent retention!
+
+# future considerations:
+- can dump failures into an SQS queue (or an SNS topic) - DLQ routing, which could be useful in the future ...
