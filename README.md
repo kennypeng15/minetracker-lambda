@@ -6,6 +6,9 @@ AWS Lambda function that scrapes and persists (to DynamoDB) minesweeper.online g
 - AWS documentation:
     - https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-instructions
 
+# considerations:
+- only games that have >= 50% solve percentage are persisted, to avoid noise.
+
 # updating steps:
 - (these are largely available from the AWS ECR page, but here as a reference)
 - after code is updated, save, and build a docker image locally
@@ -28,5 +31,6 @@ AWS Lambda function that scrapes and persists (to DynamoDB) minesweeper.online g
 - timeout: 20s
 - be sure to configure the cloudwatch log group for your lambda to not have permanent retention!
 
-# future considerations:
-- can dump failures into an SQS queue (or an SNS topic) - DLQ routing, which could be useful in the future ...
+# debugging:
+- failures are dumped into an SQS queue, where they can be inspected manually
+- future work could involve a programmatic way to deal with these SQS events

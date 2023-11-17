@@ -60,8 +60,8 @@ def handler(event=None, context=None):
     statistics, difficulty = process_scraped_minesweeper_game(result_block, difficulty_selector, os.environ['MINESWEEPER_USERNAME'])
 
     # check to see if this is meaningful (i.e., the game wasn't too short)
-    if statistics["solve-percentage"] < 20.0:
-        logger.info("Game processed, but was not meaningful (solve percentage too low). Skipping.")
+    if statistics["solve-percentage"] < 50.0:
+        logger.info("Game processed, but was not meaningful (solve percentage too low; i.e., below 50%). Skipping.")
         return
 
     # now, actually write to Dynamo
