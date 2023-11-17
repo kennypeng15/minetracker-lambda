@@ -61,7 +61,7 @@ def handler(event=None, context=None):
 
     # check to see if this is meaningful (i.e., the game wasn't too short)
     if statistics["solve-percentage"] < 50.0:
-        logger.info("Game processed, but was not meaningful (solve percentage too low; i.e., below 50%). Skipping.")
+        logger.info("Game processed, but solve percentage of " + str(statistics["solve-percentage"]) + " was below 50% threshold. Skipping.")
         return
 
     # now, actually write to Dynamo
