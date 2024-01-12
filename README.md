@@ -1,6 +1,9 @@
 # minetracker-lambda
 ---
 
+(this README focuses on the Lambda project only. for the write-up about MineTracker as a whole, 
+see https://kennypeng15.github.io/projects/minetracker/index.html)
+
 ## Overview and Design
 An AWS Lambda function that scrapes and persists (to DynamoDB) data about minesweeper.online games from a URL provided in an SNS event payload.
 
