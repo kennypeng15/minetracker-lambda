@@ -19,13 +19,13 @@ serves as the base image for a Lambda function invoked from SNS.
 
 The Docker image (and thus Dockerfile) includes the aforementioned `boto3` and `selenium` libraries, as well as `python-dotenv` for secrets.
 More importantly, it also includes a Chrome for Linux binary and a corresponding Chromedriver (necessary for 
-programatically accessing and scraping URLs), as pre-packaged Lambda images do not have those available.
+programmatically accessing and scraping URLs), as pre-packaged Lambda images do not have those available.
 
 ## Inspiration and Credits
 The Dockerfile of this repository is largely based on [umihico's](https://github.com/umihico) 
 [docker-selenium-lambda](https://github.com/umihico/docker-selenium-lambda) repository.
 
-Inspiration was also drawn froom AWS documentation (https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-instructions).
+Inspiration was also drawn from AWS documentation (https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-instructions).
 
 ## Updating the Lambda:
 Steps (i.e., specific command line instructions) for updating ECR and thus the Lambda function in AWS itself are available 
@@ -56,7 +56,7 @@ Debate: should retries be 1? 0? or 2?
 - there are 3 main kinds of errors that pop up:
 - timeout errors (which just happen, and can lead to actual data loss)
 - element not found errors (which mean that the game actually wasn't played)
-- webdriver exception errors (oopsie on the webdriver side) (can lead to actual dats loss as well)
+- webdriver exception errors (oopsie on the webdriver side) (can lead to actual data loss as well)
 - so if we set to 1 and just assume that the true number of element not founds is true, maybe we'll have more success ...
 - changed to 1.
 - still, some things slip through the cracks - could consider upping to 2 ...
